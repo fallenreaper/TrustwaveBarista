@@ -1,0 +1,104 @@
+<html>
+	<head>
+		<link rel="stylesheet" href="css/bootstrap.min.css" />
+		<style>
+			body{
+				width: 95%;
+				margin-left: auto;
+				margin-right: auto;
+			}
+			li.block{
+				padding: 10px;
+				border-bottom: solid 1px black;
+			}
+			li.block > input{
+				float:right;
+			}
+			li.block:nth-child(even){
+				background-color: #Ccc;
+			}
+			li.block:nth-child(odd){
+				background-color: lightgrey;
+			}
+			.drinks li.block:hover{
+				/*background-color: grey;*/
+				cursor: pointer;
+			}
+			#buy{
+				float:right;
+			}
+			#choice, #drink_bought{
+				margin-left: auto;
+				margin-right: auto;
+				text-align:center;
+			}
+			#drink_bought{
+				float: right;
+			}
+			.drinks li:hover{
+				background-color: white;
+			}
+			#restock{
+				/*float:left;*/
+				background-color: grey;
+			}
+		</style>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+		<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
+		<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+		<script type="text/javascript" src="js/angular.min.js"></script>
+		<script type="text/javascript" src="js/app.js"></script>
+		<script type="text/javascript" src = "js/Drink.js"></script>
+		<script type="text/javascript" src = "js/CoffeeMachine.js"></script>
+		<script type="text/javascript" src = "js/JavascriptEvents.js"></script>
+		<script type="text/javascript">
+			//launch new CM, with InitialStock and Drinks being defined in DefaultData.js
+			var CM = new CoffeeMachine(InitialStock, Drinks);
+			//If you open console, you could fiddle around with the CM object.  Chrome will have it clickable.
+			console.log("CM", CM);
+			
+			//radius of corners of lists to make it look nicer:
+			$(function(){
+				$("li.block").first().css({borderTopLeftRadius: 10, borderTopRightRadius: 10});
+				$("li.block").last().css({borderBottomLeftRadius: 10, borderBottomRightRadius: 10});
+			});
+			
+			
+			
+			
+		</script>
+	</head>
+	<body ng-app="Trustwave">
+		<h1>Coffee Machine</h1>
+		<span>By: William Francis</span>
+		<br /><br />
+		<div>Machine Current Stock Values:</div>
+		<div ng-controller="Ingredients as list">
+			<ul class="list-group inventory">
+				<li class="list-group-item block" ng-repeat="(name, value) in list.GetIngredients()">
+						<span>{{::name.replace("_", " ");}}: </span>
+						<span>(Max Stock: </span>
+						<span class="stock_value {{::name}}" >{{::value}}</span>
+						<span>)</span>
+						<input type="number" name="{{::name}}" value="{{value}}" />
+				</li>
+			</ul>
+		</div>
+		<div>Drink Purchasing:</div>
+		<div ng-controller="Drinks as list">
+			<ul class="list-group drinks">
+				<li class="list-group-item block btn" ng-repeat="(value, name) in list.GetDrinks()" >
+					<span id="{{::name.getId();}}">{{::name.getName();}} ( Cost: ${{::name.getCost().toFixed(2);}} )</span>
+				</li>
+			</ul>
+			<div id="sales-buttons">
+			<div class="btn" id="restock">Restock Machine</div>
+			<div id="drink_bought"></div>
+			</div>
+		</div>
+		<div>
+			<div>Bought Drink Order:</div>
+			<ol id="acquired"></ol>
+		</div>
+	</body>
+</html>
